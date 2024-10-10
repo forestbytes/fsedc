@@ -1,0 +1,2 @@
+[run]
+omit = dcat/tests/*,*/__init__.py

@@ -16,6 +16,7 @@ class AssetDetailView(DetailView):
         obj = super().get_object()
         return obj
 
+
 class AssetSearchResults(ListView, FormMixin):
     model = Asset
     context_object_name = "asset_list"

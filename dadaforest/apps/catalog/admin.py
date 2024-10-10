@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import SearchTerm , Domain, Asset, Keyword
+from .models import SearchTerm, Domain, Asset, Keyword
 
 
 class KeywordsInline(admin.TabularInline):
@@ -14,7 +14,10 @@ class AssetInline(admin.TabularInline):
 @admin.register(SearchTerm)
 class SearchTermAdmin(admin.ModelAdmin):
     ordering = ["pk"]
-    list_display = ["id", "term",]
+    list_display = [
+        "id",
+        "term",
+    ]
     list_filter = ["term"]
 
 
