@@ -1,2 +1,1 @@
-DCAT_URLS = [
-]
+DCAT_URLS = []
