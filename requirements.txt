@@ -16,3 +16,5 @@ pytest
 pytest-cov
 pytest-sugar
 ruff
+pipx
+hatch
