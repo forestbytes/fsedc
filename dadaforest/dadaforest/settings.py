@@ -20,17 +20,27 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Dev mode or prod?
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "localhost")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", get_random_secret_key())
+DJANGO_SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+if DJANGO_SECRET_KEY is None or DJANGO_SECRET_KEY == "":
+    SECRET_KEY = get_random_secret_key()    
+else:
+    SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG")
+if DEBUG in ["False", "false", 0, "0"]:
+    DEBUG = False
+else:
+    DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
 
 
 # Application definition
@@ -41,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'django_extensions',
     'apps.catalog',
@@ -54,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'dadaforest.urls'
@@ -136,9 +148,18 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "static")
+STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if DEVELOPMENT_MODE == "localhost":
+    CSRF_TRUSTED_ORIGINS = [
+        f"http://{h}" for h in os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+    ]
+else:
+    CSRF_TRUSTED_ORIGINS = [
+        f"https://{h}" for h in os.environ.get("DJANGO_ALLOWED_HOSTS").split(",")
+    ]
