@@ -1,0 +1,6 @@
+.env
+*.bak
+.venv/
+venv/
+node_modules/
+
